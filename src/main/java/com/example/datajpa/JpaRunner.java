@@ -43,5 +43,26 @@ public class JpaRunner implements ApplicationRunner {
         Session session = entityManager.unwrap(Session.class);
         session.save(account);
         session.save(study);
+
+        //캐시를 사용해 원래 가지고 있던 객체에서 가져옴
+        Account n1tjrgns = session.load(Account.class, account.getId());
+        System.out.println("=====================");
+        System.out.println(n1tjrgns.getUsername());
+
+        //JpaRunner 클래스에서 객체에 set 하는 행위는 JPA 입장에서는 transient 상태이다
+        //save 되는 순간 Persistent 상태가 되는데
+        Post post = new Post();
+        post.setTitle("DATA JPA 언제보나");
+
+        Comment comment = new Comment();
+        comment.setComment("빨리 보자");
+        post.addComment(comment);
+
+        Comment comment1 = new Comment();
+        comment1.setComment("응 알겠어");
+        post.addComment(comment);
+
+        session.save(post);
+
     }
 }
