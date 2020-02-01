@@ -22,6 +22,12 @@ public class Account {
     @Transient //@Transient 컬럼으로 매핑을 안해줌
     private String no;
 
+    @Embedded //comosite value 사용방법 @Embedded 어노테이션
+    @AttributeOverrides({ //오버라이딩해서 사용 할 수도 있음.
+            @AttributeOverride(name = "street", column = @Column(name = "office_street"))
+    })
+    private Address officeAddress;
+
     public Long getId() {
         return id;
     }
