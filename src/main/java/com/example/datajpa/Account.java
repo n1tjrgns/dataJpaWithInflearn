@@ -2,6 +2,8 @@ package com.example.datajpa;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Account {
@@ -14,6 +16,25 @@ public class Account {
     private String username;
 
     private String password;
+
+    //한 사람이 여러 스터디를 가지고있을 수 있다.
+    //Many로 끝나면 컬렉션 타입이어야함.
+    //하지만 @onetomany , @manytoone 만 사용하면 여러 단방향 관계에 지나지않는다.
+    //양방향 관계를 만들어주기 위해서는 mappedBy를 사용해줘야 한다.
+    //양방향 관계를 설정했다면 @ManyToOne 어노테이션이 달려있는 곳이 주인이 된다.(fk를 가진쪽)
+    //어떤 멤버 변수와 매핑될건지를 선언해야 한다.
+    @OneToMany(mappedBy = "owner")
+    private Set<Study> studies = new HashSet<>();
+
+
+
+    public Set<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(Set<Study> studies) {
+        this.studies = studies;
+    }
 
     //요즘엔 LocalDateTime.now 같은걸 사용함
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,4 +72,16 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void addStudy(Study study) {
+        this.getStudies().add(study);
+        study.setOwner(this);
+    }
+
+    public void removeStudy(Study study) {
+        this.getStudies().remove(study);
+        study.setOwner(null);
+    }
+
+
 }
