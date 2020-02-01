@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 //EntityManager와 관련된 Operation은 한 트랜잭션 안에서 실행되어야 한다.
 @Transactional
@@ -64,5 +65,9 @@ public class JpaRunner implements ApplicationRunner {
 
         session.save(post);
 
+        //네이티브 쿼리 작성 방법
+        List<Post> posts = entityManager.createNativeQuery("Select * FROM Post", Post.class)
+                .getResultList();
+        posts.forEach(System.out::println);
     }
 }
